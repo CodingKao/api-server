@@ -38,6 +38,31 @@ Clone repo, `npm i`, then run `nodemon` in the terminal
 
 To run tests, after running `npm i`, run the command `npm test`
 
-#### UML
+#### Lab 3 UML
 
-![UML image](./assets/api-server-uml.jpeg)
+![Lab 3 UML image](./assets/api-server-uml.jpeg)
+
+# Lab 4
+
+### Lab 4 UML
+
+![Lab 3 UML image](./assets/lab4-uml.png)
+
+# Pair programming with Kati
+
+**Who was your partner?**
+
+Katie Lee
+
+**What was your key takeaway?**
+
+When engaging in pair programming, I found that explaining my code to someone else greatly improved my comprehension and collaboration skills. Additionally, listening to someone explain their code to me enhanced my learning and helped identify potential issues more effectively.
+
+
+**Share the link to your PR request.**
+
+
+
+**Share the link to their PR request.**
+
+https://github.com/KatiLee/api-server/pull/2
