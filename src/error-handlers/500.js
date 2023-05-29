@@ -1,6 +1,13 @@
-const errorHandler = (err, req, res, next) => {
-  console.error(err); 
-  res.status(500).json({ error: 'Internal Server Error' });
-};
+'use strict';
 
-module.exports = errorHandler;
+module.exports = (error, req, res, next) => {
+  const errMess = typeof(error) === 'string' ? error : error.message;
+  res.status(500).send({
+    error: 500,
+    route: req.path,
+    query: req.query,
+    path: req.params,
+    body: req.body,
+    message: `Error in server: ${errMess}`,
+  });
+};
