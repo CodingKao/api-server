@@ -46,7 +46,7 @@ To run tests, after running `npm i`, run the command `npm test`
 
 ### Lab 4 UML
 
-![Lab 3 UML image](./assets/lab4-uml.png)
+![Lab 4 UML image](./assets/lab4-uml.png)
 
 # Pair programming with Kati
 
