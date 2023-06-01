@@ -1,24 +1,28 @@
+'use strict';
+
+//IMPORTS
 const express = require('express');
+const cors = require('cors');
+const notFound = require('./error-handlers/404');
+const errorHandler = require('./error-handlers/500');
+// ** Routers **/
+const foodRouter = require('./routes/food');
+//TODO: get this route working
+const ingredientRouter = require('./routes/ingredient');
+
+//express singleton & needed uses of dependencies
 const app = express();
-const foodRoutes = require('./routes/food');
-const clothesRoutes = require('./routes/clothes');
-
+app.use(cors());
 app.use(express.json());
+app.use(foodRouter);
+app.use(ingredientRouter);
 
-app.use('/food', foodRoutes);
+app.use('*', notFound); // 404 error handler
+app.use(errorHandler); // catch all 500 error handler
 
-app.use('/clothes', clothesRoutes);
+const start = (port) => app.listen(port, () => console.log('server running on', port));
 
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Internal Server Error' });
-});
-
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = {
+  app,
+  start,
+};

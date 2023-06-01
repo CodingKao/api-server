@@ -1,29 +1,16 @@
 'use strict';
 
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('sqlite::memory:');
+module.exports = (sequelizeDatabase, DataTypes) => {
 
-const Food = sequelize.define('Food', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  price: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-}, {
-  tableName: 'food',
-  timestamps: false,
-});
+  return sequelizeDatabase.define('food', {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false, // food must be named
 
-module.exports = Food;
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  });
+};
