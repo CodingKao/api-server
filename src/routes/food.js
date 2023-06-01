@@ -2,67 +2,52 @@
 
 const express = require('express');
 const router = express.Router();
-const Food = require('../models/food');
+const { food, ingredients } = require('../models/index');
 
-router.post('/', async (req, res) => {
-  try {
-    const { name, description, price } = req.body;
-    const food = await Food.create({ name, description, price });
-    res.status(201).json(food);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create the record' });
+
+// get food items connected with ingredients table
+router.get('/foodWithIngredients', async (req, res, next) => {
+  //.model had to be added due to the models interaction with each other so one had to be called
+  let foodItems = await food.read(null, { include: { model: ingredients.model } });
+
+  res.status(200).send(foodItems);
+});
+
+router.post('/food', async (req, res) => {
+  let newFood = await food.create(req.body);
+
+  res.status(200).send(newFood);
+});
+
+router.get('/food', async (req, res) => {
+  let allFoodItems = await food.read();
+
+  res.status(200).send(allFoodItems);
+});
+
+router.get('/food/:id', async (req, res) => {
+  let singleFoodItem = await food.read(req.params.id);
+
+  if (singleFoodItem === null) {
+    console.log('Food item not found!');
+  } else {
+    res.status(200).send(singleFoodItem);
   }
 });
 
-router.get('/', async (req, res) => {
-  try {
-    const foods = await Food.findAll();
-    res.status(200).json(foods);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch the records' });
-  }
+router.put('/food/:id', async (req, res) => {
+  let updatedFoodItem = await food.update(req.body, req.params.id );
+
+  res.status(200).send(updatedFoodItem);
 });
 
-router.get('/:id', async (req, res) => {
+router.delete('/food/:id', async (req, res, next) => {
   try {
-    const food = await Food.findByPk(req.params.id);
-    if (food) {
-      res.status(200).json(food);
-    } else {
-      res.status(404).json({ error: 'Record not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch the record' });
-  }
-});
+    await food.delete({ where: {id: req.params.id}});
 
-router.put('/:id', async (req, res) => {
-  try {
-    const { name, description, price } = req.body;
-    const updatedFood = await Food.update({ name, description, price }, {
-      where: { id: req.params.id },
-      returning: true,
-    });
-    if (updatedFood[0] === 0) {
-      res.status(404).json({ error: 'Record not found' });
-    } else {
-      res.status(200).json(updatedFood[1][0]);
-    }
+    res.status(200).send('deleted selected food item');
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update the record' });
-  }
-});
-
-router.delete('/:id', async (req, res) => {
-  try {
-    const deletedRowsCount = await Food.destroy({ where: { id: req.params.id } });
-    if (deletedRowsCount === 0) {
-      res.status(404).json({ error: 'Record not found' });
-    } else {
-      res.status(200).json(null);
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete the record' });
+    next(error);
   }
 });
 
